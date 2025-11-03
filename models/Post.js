@@ -3,11 +3,11 @@ const mongoose = require('mongoose');
 const postSchema = new mongoose.Schema({
     type:{
         type:String,
-        require:true
+        required:true
     },
     id:{
         type:String,
-        require:true
+        required:true
     },
     category:{
         type:[
@@ -17,9 +17,14 @@ const postSchema = new mongoose.Schema({
             }
         ]
     },
+    selectedCategory:{
+        type:String,
+        required:true
+    }
+    ,
     price:{
         type:String,
-        require:true
+        required:true
     },
     link:{
         type:String,

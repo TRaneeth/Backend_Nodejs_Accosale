@@ -16,14 +16,14 @@ const storage = multer.diskStorage({
 
 const doPost = async(req,res)=>{
     try {
-        const {type,id,category,price,link,info} = req.body
+        const {type,id,category,selectedCategory,price,link,info} = req.body
         const image = req.file? req.file.filename:undefined;
         const user = await User.findById(req.userId)
         if(!user){
             res.status(404).json({message:'Vender not found'})
         }
         const post = new Post({
-            type,id,category,price,link,image,info,user:user._id
+            type,id,category,selectedCategory,price,link,image,info,user:user._id
         })
     
         const savedPost = await post.save()
