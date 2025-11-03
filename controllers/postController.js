@@ -14,29 +14,41 @@ const storage = multer.diskStorage({
     })
     const upload = multer({ storage });
 
-const doPost = async(req,res)=>{
-    try {
-        const {type,id,category,selectedCategory,price,link,info} = req.body
-        const image = req.file? req.file.filename:undefined;
-        const user = await User.findById(req.userId)
-        if(!user){
-            res.status(404).json({message:'Vender not found'})
-        }
-        const post = new Post({
-            type,id,category,selectedCategory,price,link,image,info,user:user._id
-        })
-    
-        const savedPost = await post.save()
-        user.post.push(savedPost)
-        await user.save()
+const doPost = async (req, res) => {
+  try {
+    const { type, id, category, selectedCategory, price, link, info } = req.body;
+    const image = req.file ? req.file.filename : undefined;
 
-        return res.status(200).json({message:'posted successfully'})
-    } catch (error) {
-        console.error(error)
-        res.status(500).json({message:'Internal server error'})
+    console.log("BODY:", req.body);
+    const user = await User.findById(req.userId);
+    if (!user) {
+      return res.status(404).json({ message: "Vendor not found" });
     }
-}
 
+    const parsedCategory = category ? JSON.parse(category) : [];
+
+    const post = new Post({
+      type,
+      id,
+      category: parsedCategory,
+      selectedCategory,
+      price,
+      link,
+      image,
+      info,
+      user: user._id,
+    });
+
+    const savedPost = await post.save();
+    user.post.push(savedPost);
+    await user.save();
+
+    return res.status(200).json({ message: "posted successfully", post: savedPost });
+  } catch (error) {
+    console.error("❌ ERROR in doPost:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
 const deletePostbyId = async(req,res)=>{
     try {
         const postId = req.params.postId
