@@ -37,6 +37,6 @@ app.listen(PORT,()=>{
     console.log(`Server started and running at ${PORT}`)
 })
 
-app.use('/',(req,res)=>{
-    res.send('Welcome to accosale')
-})
+app.get("/", (req, res) => {
+  res.json({ message: "Welcome to Accosale Backend" });
+});
