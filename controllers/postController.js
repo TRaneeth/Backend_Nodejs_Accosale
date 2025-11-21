@@ -49,6 +49,16 @@ const doPost = async (req, res) => {
   }
 };
 
+const getAllPosts = async (req, res)=>{
+  try {
+    const posts = await Post.find()
+    res.json({posts})
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({message:'Internal server error'})
+  }
+}
+
 const getMyPosts = async (req, res) => {
   try {
     const userId = req.userId;
@@ -73,4 +83,4 @@ const deletePostbyId = async(req,res)=>{
     }
 }
 
-module.exports = {doPost: [upload.single('image'),doPost],deletePostbyId,getMyPosts}
+module.exports = {doPost: [upload.single('image'),doPost],deletePostbyId,getMyPosts,getAllPosts}
