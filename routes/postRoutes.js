@@ -14,4 +14,7 @@ router.get('/uploads/:imageName',(req,res)=>{
 
 router.delete('/:postId',postController.deletePostbyId)
 
+router.get('/my-posts', verifyToken, postController.getMyPosts);
+
+
 module.exports = router;

@@ -19,11 +19,8 @@ const doPost = async (req, res) => {
     const { type, id, category, selectedCategory, price, link, info } = req.body;
     const image = req.file ? req.file.filename : undefined;
 
-    console.log("BODY:", req.body);
     const user = await User.findById(req.userId);
-    if (!user) {
-      return res.status(404).json({ message: "Vendor not found" });
-    }
+    if (!user) return res.status(404).json({ message: "Vendor not found" });
 
     const parsedCategory = category ? JSON.parse(category) : [];
 
@@ -36,11 +33,13 @@ const doPost = async (req, res) => {
       link,
       image,
       info,
-      user: user._id,
+      user: user._id, // single id
     });
 
     const savedPost = await post.save();
-    user.post.push(savedPost);
+
+    // push only post id to user's post array
+    user.post.push(savedPost._id);
     await user.save();
 
     return res.status(200).json({ message: "posted successfully", post: savedPost });
@@ -49,6 +48,18 @@ const doPost = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+const getMyPosts = async (req, res) => {
+  try {
+    const userId = req.userId;
+    const posts = await Post.find({ user: userId }).sort({ createdAt: -1 });
+    return res.status(200).json({ posts });
+  } catch (error) {
+    console.error("❌ ERROR in getMyPosts:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 const deletePostbyId = async(req,res)=>{
     try {
         const postId = req.params.postId
@@ -62,4 +73,4 @@ const deletePostbyId = async(req,res)=>{
     }
 }
 
-module.exports = {doPost: [upload.single('image'),doPost],deletePostbyId}
+module.exports = {doPost: [upload.single('image'),doPost],deletePostbyId,getMyPosts}

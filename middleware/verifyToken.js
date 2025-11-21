@@ -5,7 +5,7 @@ const dotEnv = require('dotenv')
 dotEnv.config()
 const secretKey = process.env.ProjectNumber
 
-const verifyToken = async(req,resizeBy,next)=>{
+const verifyToken = async(req,res,next)=>{
     const token = req.headers.token
 
     if(!token){
