@@ -5,6 +5,7 @@ const cors = require('cors')
 const userRoutes = require('./routes/userRoutes')
 const postRoutes = require('./routes/postRoutes')
 const path = require('path')
+const chatRoutes = require('./routes/chatRoutes')
 
 const app = express()
 
@@ -30,6 +31,7 @@ mongoose.connect(process.env.MONGO_URI, {
 app.use('/user',userRoutes)
 app.use('/post',postRoutes)
 app.use('/uploads',express.static('uploads'))
+app.use('/chat',chatRoutes)
 
 
 
